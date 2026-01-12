@@ -82,7 +82,7 @@ const CarteFidelite: React.FC<CarteFideliteProps> = ({ data, currentUser, setCur
           <p className='text-sm text-gray-500 mt-2'>
             {userPoints === nombreTampons ? (
               <>
-                Carte complète ! <i className='fas fa-party-horn text-yellow-500'></i>
+                Carte complète ! <i className='fas fa-gift text-yellow-500'></i>
               </>
             ) : (
               `Plus que ${nombreTampons - userPoints} tampons`
