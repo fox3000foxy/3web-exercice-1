@@ -79,7 +79,15 @@ const CarteFidelite: React.FC<CarteFideliteProps> = ({ data, currentUser, setCur
           <div className='w-full bg-gray-200 rounded-full h-3'>
             <div className='bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-500' style={{ width: `${(userPoints / nombreTampons) * 100}%` }} />
           </div>
-          <p className='text-sm text-gray-500 mt-2'>{userPoints === nombreTampons ? 'Carte complète ! 🎉' : `Plus que ${nombreTampons - userPoints} tampons`}</p>
+          <p className='text-sm text-gray-500 mt-2'>
+            {userPoints === nombreTampons ? (
+              <>
+                Carte complète ! <i className='fas fa-party-horn text-yellow-500'></i>
+              </>
+            ) : (
+              `Plus que ${nombreTampons - userPoints} tampons`
+            )}
+          </p>
         </div>
 
         {/* Grille de Tampons extraite */}
