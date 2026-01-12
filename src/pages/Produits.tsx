@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import { Badge, Card, PageHeader, Pagination, SearchInput, SelectFilter, StatCard } from '../components';
+import { Badge, Button, Card, DeleteConfirmModal, PageHeader, Pagination, ProductFormModal, SearchInput, SelectFilter, StatCard } from '../components';
+import { useData } from '../contexts/DataContext';
+import { useToast } from '../contexts/ToastContext';
 import { usePagination, useSearch } from '../hooks';
-import { DataType, Utilisateur } from '../types';
+import { Produit } from '../types';
 
-interface ProduitsProps {
-  data: DataType;
-  currentUser: Utilisateur | null;
-}
-
-const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
+const Produits: React.FC = () => {
+  const { data, currentUser, updateProduct, addProduct, deleteProduct } = useData();
+  const { addToast } = useToast();
   const { searchTerm, handleSearchChange } = useSearch();
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Produit | null>(null);
+
+  if (!data) return null;
 
   const { produits } = data;
 
@@ -31,12 +35,60 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
   const inactiveProducts = produits.filter(p => !p.actif).length;
   const totalProducts = produits.length;
 
-  const toggleProductStatus = (productId: number) => {
+  const handleAddProduct = () => {
     if (!currentUser?.estAdmin) {
-      alert('Seuls les administrateurs peuvent modifier les produits');
+      addToast('Seuls les administrateurs peuvent ajouter des produits', 'error');
       return;
     }
-    alert(`Changement de statut du produit #${productId}`);
+    setSelectedProduct(null);
+    setIsFormModalOpen(true);
+  };
+
+  const handleEditProduct = (product: Produit) => {
+    if (!currentUser?.estAdmin) {
+      addToast('Seuls les administrateurs peuvent modifier les produits', 'error');
+      return;
+    }
+    setSelectedProduct(product);
+    setIsFormModalOpen(true);
+  };
+
+  const handleDeleteClick = (product: Produit) => {
+    if (!currentUser?.estAdmin) {
+      addToast('Seuls les administrateurs peuvent supprimer des produits', 'error');
+      return;
+    }
+    setSelectedProduct(product);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleSubmitProduct = (productData: Omit<Produit, 'id'>) => {
+    if (selectedProduct) {
+      updateProduct(selectedProduct.id, productData);
+      addToast(`Produit "${productData.nom}" modifié avec succès`, 'success');
+    } else {
+      addProduct(productData);
+      addToast(`Produit "${productData.nom}" ajouté avec succès`, 'success');
+    }
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedProduct) {
+      deleteProduct(selectedProduct.id);
+      addToast(`Produit "${selectedProduct.nom}" supprimé`, 'success');
+    }
+  };
+
+  const toggleProductStatus = (product: Produit) => {
+    if (!currentUser?.estAdmin) {
+      addToast('Seuls les administrateurs peuvent modifier les produits', 'error');
+      return;
+    }
+    updateProduct(product.id, { actif: !product.actif });
+    addToast(
+      `Produit "${product.nom}" ${!product.actif ? 'activé' : 'désactivé'}`,
+      'success'
+    );
   };
 
   return (
@@ -47,6 +99,13 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
         subtitle={`${filteredProducts.length} produit${filteredProducts.length > 1 ? 's' : ''} trouvé${filteredProducts.length > 1 ? 's' : ''}`}
         icon="box"
         iconColor="blue"
+        actions={
+          currentUser?.estAdmin ? (
+            <Button variant="success" icon="plus" onClick={handleAddProduct}>
+              Ajouter un produit
+            </Button>
+          ) : undefined
+        }
       />
 
       {/* Stats */}
@@ -109,7 +168,7 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
             <div className='p-5'>
               <div className='flex items-start justify-between mb-3'>
                 <h3 className={`font-semibold text-sm flex-1 ${product.actif ? 'text-gray-900' : 'text-gray-500'}`}>{product.nom}</h3>
-                <button onClick={() => toggleProductStatus(product.id)}>
+                <button onClick={() => toggleProductStatus(product)}>
                   <Badge variant={product.actif ? 'green' : 'gray'} icon={product.actif ? 'check-circle' : 'times-circle'} size="sm">
                     {product.actif ? 'Actif' : 'Inactif'}
                   </Badge>
@@ -123,11 +182,15 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
               <div className='flex items-center gap-2'>
                 {currentUser?.estAdmin && (
                   <>
-                    <button className='flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm'>
+                    <button
+                      onClick={() => handleEditProduct(product)}
+                      className='flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm'>
                       <i className='fas fa-edit mr-1.5'></i>
                       Modifier
                     </button>
-                    <button className='bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm'>
+                    <button
+                      onClick={() => handleDeleteClick(product)}
+                      className='bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm'>
                       <i className='fas fa-trash'></i>
                     </button>
                   </>
@@ -155,6 +218,22 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
           startIndex={startIndex}
         />
       </Card>
+
+      {/* Modals */}
+      <ProductFormModal
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+        onSubmit={handleSubmitProduct}
+        product={selectedProduct}
+      />
+
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        itemName={selectedProduct?.nom || ''}
+        itemType="le produit"
+      />
     </div>
   );
 };

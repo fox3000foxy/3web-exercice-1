@@ -1,35 +1,18 @@
-import React, { useEffect, useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
+import { DataProvider, useData } from './contexts/DataContext';
+import { ToastProvider } from './contexts/ToastContext';
 import CarteFidelite from './pages/CarteFidelite';
 import Commandes from './pages/Commandes';
 import Dashboard from './pages/Dashboard';
 import Produits from './pages/Produits';
 import Utilisateurs from './pages/Utilisateurs';
-import { DataType, Utilisateur } from './types';
 
+import React from 'react';
 React;
 
-function App() {
-  const [data, setData] = useState<DataType | null>(null);
-  const [currentUser, setCurrentUser] = useState<Utilisateur | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Charger les données depuis data.json
-    fetch('/data.json')
-      .then(response => response.json())
-      .then((jsonData: DataType) => {
-        setData(jsonData);
-        // Définir un utilisateur par défaut (admin pour tester toutes les fonctionnalités)
-        setCurrentUser(jsonData.utilisateurs.find(u => u.estAdmin) || jsonData.utilisateurs[0]);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Erreur lors du chargement des données:', error);
-        setLoading(false);
-      });
-  }, []);
+const AppContent = () => {
+  const { data, currentUser, loading, error, setCurrentUser } = useData();
 
   if (loading) {
     return (
@@ -50,14 +33,14 @@ function App() {
     );
   }
 
-  if (!data) {
+  if (error || !data) {
     return (
       <div className='flex items-center justify-center min-h-screen bg-gradient-to-br from-red-600 via-pink-600 to-purple-600'>
         <div className='bg-white/95 backdrop-blur-lg p-10 rounded-2xl shadow-2xl max-w-md animate-fade-in-scale'>
           <div className='text-center'>
             <div className='text-6xl mb-4'>❌</div>
             <h1 className='text-3xl font-bold text-red-600 mb-3'>Erreur</h1>
-            <p className='text-gray-700 text-lg'>Impossible de charger les données.</p>
+            <p className='text-gray-700 text-lg'>{error || 'Impossible de charger les données.'}</p>
             <button onClick={() => window.location.reload()} className='mt-6 btn-primary'>
               Réessayer
             </button>
@@ -75,11 +58,21 @@ function App() {
           <Route path='/dashboard' element={<Dashboard data={data} />} />
           <Route path='/carte-fidelite' element={<CarteFidelite data={data} currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
           <Route path='/utilisateurs' element={<Utilisateurs data={data} currentUser={currentUser} />} />
-          <Route path='/produits' element={<Produits data={data} currentUser={currentUser} />} />
+          <Route path='/produits' element={<Produits />} />
           <Route path='/commandes' element={<Commandes data={data} currentUser={currentUser} />} />
         </Routes>
       </Layout>
     </Router>
+  );
+};
+
+function App() {
+  return (
+    <ToastProvider>
+      <DataProvider>
+        <AppContent />
+      </DataProvider>
+    </ToastProvider>
   );
 }
 
