@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Button from '../components/Button';
+import Modal from '../components/Modal';
 import { DataType, Produit, Utilisateur } from '../types';
 
 interface CarteFideliteProps {
@@ -134,62 +136,55 @@ const CarteFidelite: React.FC<CarteFideliteProps> = ({ data, currentUser, setCur
       </div>
 
       {/* Modal Récompense */}
-      {showRewardModal && (
-        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fade-in'>
-          <div className='bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl relative animate-slide-in'>
-            <button onClick={() => setShowRewardModal(false)} className='absolute top-4 right-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full p-2 transition-colors'>
-              <i className='fas fa-times text-xl'></i>
-            </button>
-
-            <div className='text-center'>
-              <div className='inline-block bg-gradient-to-br from-yellow-400 to-orange-500 p-6 rounded-full mb-4 shadow-lg'>
-                <i className='fas fa-gift text-white text-5xl'></i>
-              </div>
-              <h2 className='text-3xl font-bold text-gray-900 mb-2'>Félicitations !</h2>
-              <p className='text-gray-600 mb-6 leading-relaxed'>Vous avez collecté tous les tampons ! Vous pouvez maintenant choisir un produit gratuit dans notre boutique.</p>
-              <button onClick={handleClaimReward} className='bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-3 px-8 rounded-lg transition-all shadow-md hover:shadow-lg'>
-                <i className='fas fa-gift mr-2'></i>
-                Choisir mon cadeau
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={showRewardModal}
+        onClose={() => setShowRewardModal(false)}
+        title="Félicitations !"
+        icon="gift"
+        iconColor="yellow"
+      >
+        <p className='text-gray-600 mb-6 leading-relaxed'>Vous avez collecté tous les tampons ! Vous pouvez maintenant choisir un produit gratuit dans notre boutique.</p>
+        <Button variant="primary" onClick={handleClaimReward} icon="gift" fullWidth>
+          Choisir mon cadeau
+        </Button>
+      </Modal>
 
       {/* Modal Commande Produit */}
-      {selectedProduct && (
-        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fade-in'>
-          <div className='bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl relative animate-slide-in'>
-            <button onClick={() => setSelectedProduct(null)} className='absolute top-4 right-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full p-2 transition-colors'>
-              <i className='fas fa-times text-xl'></i>
-            </button>
+      <Modal
+        isOpen={!!selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        title="Commander"
+        icon="shopping-bag"
+        iconColor="blue"
+      >
+        {selectedProduct && (
+          <>
+            <p className='text-xl font-semibold text-gray-700 mb-1'>{selectedProduct.nom}</p>
+            <p className='text-3xl font-bold text-blue-600 mb-6'>{selectedProduct.prix.toFixed(2)} €</p>
 
-            <div className='text-center'>
-              <div className='inline-block bg-gradient-to-br from-blue-500 to-blue-600 p-6 rounded-full mb-4 shadow-lg'>
-                <i className='fas fa-shopping-bag text-white text-5xl'></i>
-              </div>
-              <h2 className='text-2xl font-bold text-gray-900 mb-2'>Commander</h2>
-              <p className='text-xl font-semibold text-gray-700 mb-1'>{selectedProduct.nom}</p>
-              <p className='text-3xl font-bold text-blue-600 mb-6'>{selectedProduct.prix.toFixed(2)} €</p>
-
-              <div className='space-y-3'>
-                <button
-                  onClick={() => {
-                    alert(`Commande confirmée : ${selectedProduct.nom}`);
-                    setSelectedProduct(null);
-                  }}
-                  className='w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-md'>
-                  <i className='fas fa-check mr-2'></i>
-                  Confirmer la commande
-                </button>
-                <button onClick={() => setSelectedProduct(null)} className='w-full bg-white border-2 border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors'>
-                  Annuler
-                </button>
-              </div>
+            <div className='space-y-3'>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  alert(`Commande confirmée : ${selectedProduct.nom}`);
+                  setSelectedProduct(null);
+                }}
+                icon="check"
+                fullWidth
+              >
+                Confirmer la commande
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => setSelectedProduct(null)}
+                fullWidth
+              >
+                Annuler
+              </Button>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </Modal>
     </div>
   );
 };

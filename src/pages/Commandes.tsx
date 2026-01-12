@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import Card from '../components/Card';
+import PageHeader from '../components/PageHeader';
+import Pagination from '../components/Pagination';
+import SearchInput from '../components/SearchInput';
+import SelectFilter from '../components/SelectFilter';
 import { DataType, Utilisateur } from '../types';
 
 interface CommandesProps {
@@ -66,15 +71,12 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
   return (
     <div className='space-y-6'>
       {/* Header */}
-      <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-6'>
-        <h1 className='text-2xl font-bold text-gray-900 flex items-center gap-2'>
-          <i className='fas fa-shopping-cart text-blue-600'></i>
-          Historique des Commandes
-        </h1>
-        <p className='text-gray-600 mt-1'>
-          {filteredOrders.length} commande{filteredOrders.length > 1 ? 's' : ''} enregistrée{filteredOrders.length > 1 ? 's' : ''}
-        </p>
-      </div>
+      <PageHeader
+        title="Historique des Commandes"
+        subtitle={`${filteredOrders.length} commande${filteredOrders.length > 1 ? 's' : ''} enregistrée${filteredOrders.length > 1 ? 's' : ''}`}
+        icon="shopping-cart"
+        iconColor="blue"
+      />
 
       {/* Stats */}
       <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
@@ -114,46 +116,35 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
       </div>
 
       {/* Filtres */}
-      <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-6'>
+      <Card>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <div>
-            <label className='block text-sm font-medium text-gray-700 mb-2'>
-              <i className='fas fa-search mr-2'></i>
-              Rechercher
-            </label>
-            <input
-              type='text'
-              value={searchTerm}
-              onChange={e => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              placeholder='Utilisateur ou produit...'
-              className='input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-            />
-          </div>
-          <div>
-            <label className='block text-sm font-medium text-gray-700 mb-2'>
-              <i className='fas fa-user mr-2'></i>
-              Utilisateur
-            </label>
-            <select
-              value={selectedUser}
-              onChange={e => {
-                setSelectedUser(e.target.value);
-                setCurrentPage(1);
-              }}
-              className='input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'>
-              <option value='all'>Tous les utilisateurs</option>
-              {utilisateurs.map(user => (
-                <option key={user.id} value={user.id.toString()}>
-                  {user.nomComplet} ({user.promo})
-                </option>
-              ))}
-            </select>
-          </div>
+          <SearchInput
+            value={searchTerm}
+            onChange={(value) => {
+              setSearchTerm(value);
+              setCurrentPage(1);
+            }}
+            placeholder="Utilisateur ou produit..."
+            label="Rechercher"
+          />
+          <SelectFilter
+            value={selectedUser}
+            onChange={(value) => {
+              setSelectedUser(value);
+              setCurrentPage(1);
+            }}
+            label="Utilisateur"
+            icon="user"
+            options={[
+              { value: 'all', label: 'Tous les utilisateurs' },
+              ...utilisateurs.map(user => ({
+                value: user.id.toString(),
+                label: `${user.nomComplet} (${user.promo})`
+              }))
+            ]}
+          />
         </div>
-      </div>
+      </Card>
 
       {/* Table */}
       <div className='bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden'>
@@ -199,24 +190,14 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
         </div>
 
         {/* Pagination */}
-        {totalPages > 1 && (
-          <div className='px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between'>
-            <div className='text-sm text-gray-700'>
-              Affichage {startIndex + 1} à {Math.min(startIndex + itemsPerPage, filteredOrders.length)} sur {filteredOrders.length} résultats
-            </div>
-            <div className='flex items-center gap-2'>
-              <button onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))} disabled={currentPage === 1} className='px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'>
-                <i className='fas fa-chevron-left'></i>
-              </button>
-              <span className='text-sm text-gray-700'>
-                Page {currentPage} sur {totalPages}
-              </span>
-              <button onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))} disabled={currentPage === totalPages} className='px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'>
-                <i className='fas fa-chevron-right'></i>
-              </button>
-            </div>
-          </div>
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          itemsPerPage={itemsPerPage}
+          totalItems={filteredOrders.length}
+          startIndex={startIndex}
+        />
       </div>
     </div>
   );

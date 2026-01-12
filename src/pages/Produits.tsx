@@ -1,4 +1,10 @@
 import React, { useState } from 'react';
+import Badge from '../components/Badge';
+import Card from '../components/Card';
+import PageHeader from '../components/PageHeader';
+import Pagination from '../components/Pagination';
+import SearchInput from '../components/SearchInput';
+import SelectFilter from '../components/SelectFilter';
 import { DataType, Utilisateur } from '../types';
 
 interface ProduitsProps {
@@ -42,15 +48,12 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
   return (
     <div className='space-y-6'>
       {/* Header */}
-      <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-6'>
-        <h1 className='text-2xl font-bold text-gray-900 flex items-center gap-2'>
-          <i className='fas fa-box text-blue-600'></i>
-          Gestion des Produits
-        </h1>
-        <p className='text-gray-600 mt-1'>
-          {filteredProducts.length} produit{filteredProducts.length > 1 ? 's' : ''} trouvé{filteredProducts.length > 1 ? 's' : ''}
-        </p>
-      </div>
+      <PageHeader
+        title="Gestion des Produits"
+        subtitle={`${filteredProducts.length} produit${filteredProducts.length > 1 ? 's' : ''} trouvé${filteredProducts.length > 1 ? 's' : ''}`}
+        icon="box"
+        iconColor="blue"
+      />
 
       {/* Stats */}
       <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
@@ -90,43 +93,33 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
       </div>
 
       {/* Filtres */}
-      <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-6'>
+      <Card>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <div>
-            <label className='block text-sm font-medium text-gray-700 mb-2'>
-              <i className='fas fa-search mr-2'></i>
-              Rechercher
-            </label>
-            <input
-              type='text'
-              value={searchTerm}
-              onChange={e => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              placeholder='Nom du produit...'
-              className='input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-            />
-          </div>
-          <div>
-            <label className='block text-sm font-medium text-gray-700 mb-2'>
-              <i className='fas fa-filter mr-2'></i>
-              Statut
-            </label>
-            <select
-              value={statusFilter}
-              onChange={e => {
-                setStatusFilter(e.target.value as 'all' | 'active' | 'inactive');
-                setCurrentPage(1);
-              }}
-              className='input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'>
-              <option value='all'>Tous les statuts</option>
-              <option value='active'>Actifs seulement</option>
-              <option value='inactive'>Inactifs seulement</option>
-            </select>
-          </div>
+          <SearchInput
+            value={searchTerm}
+            onChange={(value) => {
+              setSearchTerm(value);
+              setCurrentPage(1);
+            }}
+            placeholder="Nom du produit..."
+            label="Rechercher"
+          />
+          <SelectFilter
+            value={statusFilter}
+            onChange={(value) => {
+              setStatusFilter(value as 'all' | 'active' | 'inactive');
+              setCurrentPage(1);
+            }}
+            label="Statut"
+            icon="filter"
+            options={[
+              { value: 'all', label: 'Tous les statuts' },
+              { value: 'active', label: 'Actifs seulement' },
+              { value: 'inactive', label: 'Inactifs seulement' }
+            ]}
+          />
         </div>
-      </div>
+      </Card>
 
       {/* Grille de Produits */}
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
@@ -135,9 +128,10 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
             <div className='p-5'>
               <div className='flex items-start justify-between mb-3'>
                 <h3 className={`font-semibold text-sm flex-1 ${product.actif ? 'text-gray-900' : 'text-gray-500'}`}>{product.nom}</h3>
-                <button onClick={() => toggleProductStatus(product.id)} className={`px-2.5 py-1 rounded-full text-xs font-medium border flex items-center gap-1.5 ${product.actif ? 'bg-green-100 text-green-700 border-green-200' : 'bg-gray-100 text-gray-700 border-gray-200'}`}>
-                  <i className={`fas ${product.actif ? 'fa-check-circle' : 'fa-times-circle'}`}></i>
-                  {product.actif ? 'Actif' : 'Inactif'}
+                <button onClick={() => toggleProductStatus(product.id)}>
+                  <Badge variant={product.actif ? 'green' : 'gray'} icon={product.actif ? 'check-circle' : 'times-circle'} size="sm">
+                    {product.actif ? 'Actif' : 'Inactif'}
+                  </Badge>
                 </button>
               </div>
 
@@ -170,24 +164,16 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-4 flex items-center justify-between'>
-          <div className='text-sm text-gray-700'>
-            Affichage {startIndex + 1} à {Math.min(startIndex + itemsPerPage, filteredProducts.length)} sur {filteredProducts.length} résultats
-          </div>
-          <div className='flex items-center gap-2'>
-            <button onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))} disabled={currentPage === 1} className='px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'>
-              <i className='fas fa-chevron-left'></i>
-            </button>
-            <span className='text-sm text-gray-700'>
-              Page {currentPage} sur {totalPages}
-            </span>
-            <button onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))} disabled={currentPage === totalPages} className='px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'>
-              <i className='fas fa-chevron-right'></i>
-            </button>
-          </div>
-        </div>
-      )}
+      <Card padding="none">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          itemsPerPage={itemsPerPage}
+          totalItems={filteredProducts.length}
+          startIndex={startIndex}
+        />
+      </Card>
     </div>
   );
 };
