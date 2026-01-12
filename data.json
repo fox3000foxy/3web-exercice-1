@@ -1,0 +1,170 @@
+{
+  "statistiques": {
+    "totalVentes": 1247.50,
+    "totalDepense": 580.24,
+    "benefice": 667.26,
+    "nombreClients": 10,
+    "nombreCommandes": 540,
+    "nombreProduits": 18,
+    "produitPlusVendu": {
+      "nom": "Coca Cola",
+      "quantite": 89
+    },
+    "heureMoyenneCommande": "12:49",
+    "moyenneEurosParCommande": 2.31,
+    "meilleurePromo": "B.ENG 3"
+  },
+  "repartitionPaiements": [
+    { "type": "Carte bancaire", "pourcentage": 45 },
+    { "type": "HelloAsso", "pourcentage": 35 },
+    { "type": "Espèces", "pourcentage": 20 }
+  ],
+  "ventesParMois": [
+    { "mois": "Oct 2024", "montant": 156.80 },
+    { "mois": "Nov 2024", "montant": 234.50 },
+    { "mois": "Déc 2024", "montant": 312.40 },
+    { "mois": "Jan 2025", "montant": 198.60 },
+    { "mois": "Fév 2025", "montant": 178.90 },
+    { "mois": "Mar 2025", "montant": 166.30 }
+  ],
+  "utilisateurs": [
+    {
+      "id": 1,
+      "nomComplet": "Coustenoble Andrea",
+      "email": "andrea.coustenoble@supinfo.com",
+      "promo": "B.ENG 3",
+      "codeAdherent": "2105",
+      "points": 0,
+      "estAdmin": false
+    },
+    {
+      "id": 2,
+      "nomComplet": "Crocquevieille Martin",
+      "email": "martin.crocquevieille@supinfo.com",
+      "promo": "B.ENG 3",
+      "codeAdherent": "5050",
+      "points": 0,
+      "estAdmin": true
+    },
+    {
+      "id": 3,
+      "nomComplet": "De bailliencourt Lucas",
+      "email": "lucas.de-bailliencourt@supinfo.com",
+      "promo": "B.ENG 3",
+      "codeAdherent": "1397",
+      "points": 1,
+      "estAdmin": false
+    },
+    {
+      "id": 4,
+      "nomComplet": "Franchet Julien",
+      "email": "julien.franchet@supinfo.com",
+      "promo": "B.ENG 3",
+      "codeAdherent": "2120",
+      "points": 0,
+      "estAdmin": true
+    },
+    {
+      "id": 5,
+      "nomComplet": "Gesret Evan",
+      "email": "evan.gesret@supinfo.com",
+      "promo": "B.ENG 3",
+      "codeAdherent": "1846",
+      "points": 0,
+      "estAdmin": true
+    },
+    {
+      "id": 6,
+      "nomComplet": "Mahe Andrew",
+      "email": "andrew.mahe@supinfo.com",
+      "promo": "B.ENG 1",
+      "codeAdherent": "1234",
+      "points": 0,
+      "estAdmin": true
+    },
+    {
+      "id": 7,
+      "nomComplet": "Morel Lucas",
+      "email": "lucas.morel@supinfo.com",
+      "promo": "B.ENG 3",
+      "codeAdherent": "1739",
+      "points": 0,
+      "estAdmin": false
+    },
+    {
+      "id": 8,
+      "nomComplet": "Nicolas Axel",
+      "email": "axel.nicolas@supinfo.com",
+      "promo": "B.ENG 1",
+      "codeAdherent": "2511",
+      "points": 0,
+      "estAdmin": false
+    },
+    {
+      "id": 9,
+      "nomComplet": "T'sjoen Anthonin",
+      "email": "anthonin.t-sjoen@supinfo.com",
+      "promo": "B.ENG 2",
+      "codeAdherent": "1278",
+      "points": 0,
+      "estAdmin": true
+    },
+    {
+      "id": 10,
+      "nomComplet": "Teyar Anbarine",
+      "email": "anbarine.teyar@supinfo.com",
+      "promo": "B.ENG 3",
+      "codeAdherent": "3547",
+      "points": 0,
+      "estAdmin": true
+    }
+  ],
+  "produits": [
+    { "id": 1, "nom": "2 balisto miel amande", "prix": 0.70, "actif": true },
+    { "id": 2, "nom": "2 barres kinder country", "prix": 1.10, "actif": true },
+    { "id": 3, "nom": "2 barres twix", "prix": 0.80, "actif": true },
+    { "id": 4, "nom": "2 Napolitain", "prix": 0.75, "actif": true },
+    { "id": 5, "nom": "Balisto muesli", "prix": 0.70, "actif": true },
+    { "id": 6, "nom": "Coca cherry", "prix": 0.85, "actif": true },
+    { "id": 7, "nom": "Coca Cola", "prix": 0.80, "actif": true },
+    { "id": 8, "nom": "Coca zéro", "prix": 0.80, "actif": true },
+    { "id": 9, "nom": "Fanta citron", "prix": 0.80, "actif": true },
+    { "id": 10, "nom": "Fanta orange", "prix": 0.80, "actif": true },
+    { "id": 11, "nom": "Haribo Dragibus", "prix": 0.60, "actif": true },
+    { "id": 12, "nom": "Haribo Tagada", "prix": 0.60, "actif": true },
+    { "id": 13, "nom": "Ice Tea pêche", "prix": 0.80, "actif": true },
+    { "id": 14, "nom": "Kit Kat", "prix": 0.90, "actif": true },
+    { "id": 15, "nom": "M&M's", "prix": 1.00, "actif": true },
+    { "id": 16, "nom": "Oasis tropical", "prix": 0.80, "actif": true },
+    { "id": 17, "nom": "Snickers", "prix": 0.95, "actif": true },
+    { "id": 18, "nom": "Sprite", "prix": 0.80, "actif": false }
+  ],
+  "carteFidelite": {
+    "nombreTampons": 8,
+    "recompense": "1 produit offert dans la boutique de snack"
+  },
+  "topClients": {
+    "parCommandes": [
+      { "nom": "Gesret Evan", "nombreCommandes": 38 },
+      { "nom": "Franchet Julien", "nombreCommandes": 27 },
+      { "nom": "Crocquevieille Martin", "nombreCommandes": 24 }
+    ],
+    "parProduits": [
+      { "nom": "Gesret Evan", "nombreProduits": 56 },
+      { "nom": "Mahe Andrew", "nombreProduits": 42 },
+      { "nom": "Teyar Anbarine", "nombreProduits": 35 }
+    ]
+  },
+  "commandes": [
+    { "id": 1, "utilisateurId": 5, "produitId": 7, "quantite": 2, "date": "2024-10-15", "montant": 1.60 },
+    { "id": 2, "utilisateurId": 4, "produitId": 15, "quantite": 1, "date": "2024-10-18", "montant": 1.00 },
+    { "id": 3, "utilisateurId": 6, "produitId": 7, "quantite": 3, "date": "2024-11-05", "montant": 2.40 },
+    { "id": 4, "utilisateurId": 10, "produitId": 12, "quantite": 2, "date": "2024-11-12", "montant": 1.20 },
+    { "id": 5, "utilisateurId": 5, "produitId": 14, "quantite": 1, "date": "2024-12-03", "montant": 0.90 },
+    { "id": 6, "utilisateurId": 2, "produitId": 8, "quantite": 2, "date": "2024-12-10", "montant": 1.60 },
+    { "id": 7, "utilisateurId": 6, "produitId": 11, "quantite": 3, "date": "2025-01-08", "montant": 1.80 },
+    { "id": 8, "utilisateurId": 4, "produitId": 7, "quantite": 1, "date": "2025-01-15", "montant": 0.80 },
+    { "id": 9, "utilisateurId": 5, "produitId": 17, "quantite": 2, "date": "2025-02-05", "montant": 1.90 },
+    { "id": 10, "utilisateurId": 10, "produitId": 13, "quantite": 1, "date": "2025-02-20", "montant": 0.80 }
+  ]
+}
