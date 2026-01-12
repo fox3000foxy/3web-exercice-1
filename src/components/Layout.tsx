@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Utilisateur } from '../types';
+import Avatar from './Avatar';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -68,12 +69,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentUser, setCurrentUser, 
               {/* Avatar dropdown */}
               <div className='relative'>
                 <button onClick={() => setUserMenuOpen(!userMenuOpen)} className='flex items-center gap-2 hover:bg-gray-50 rounded-lg px-3 py-2 transition-colors'>
-                  <div className='w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold'>
-                    {currentUser?.nomComplet
-                      .split(' ')
-                      .map(n => n[0])
-                      .join('') || 'U'}
-                  </div>
+                  <Avatar name={currentUser?.nomComplet || 'Utilisateur'} isAdmin={currentUser?.estAdmin} size='sm' />
                   <i className={`fas fa-chevron-down text-gray-400 text-xs transition-transform ${userMenuOpen ? 'rotate-180' : ''}`}></i>
                 </button>
 
@@ -91,12 +87,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentUser, setCurrentUser, 
                             setUserMenuOpen(false);
                           }}
                           className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center gap-3 ${currentUser?.id === user.id ? 'bg-blue-50' : ''}`}>
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold ${user.estAdmin ? 'bg-gradient-to-br from-orange-500 to-red-600' : 'bg-gradient-to-br from-blue-500 to-blue-600'}`}>
-                            {user.nomComplet
-                              .split(' ')
-                              .map(n => n[0])
-                              .join('')}
-                          </div>
+                          <Avatar name={user.nomComplet} isAdmin={user.estAdmin} size='sm' />
                           <div className='flex-1 min-w-0'>
                             <p className='text-sm font-medium text-gray-900 truncate'>{user.nomComplet}</p>
                             <p className='text-xs text-gray-500 flex items-center gap-2'>

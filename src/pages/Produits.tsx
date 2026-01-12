@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
-import Badge from '../components/Badge';
-import Card from '../components/Card';
-import PageHeader from '../components/PageHeader';
-import Pagination from '../components/Pagination';
-import SearchInput from '../components/SearchInput';
-import SelectFilter from '../components/SelectFilter';
+import { Badge, Card, PageHeader, Pagination, SearchInput, SelectFilter, StatCard } from '../components';
+import { usePagination, useSearch } from '../hooks';
 import { DataType, Utilisateur } from '../types';
 
 interface ProduitsProps {
@@ -13,10 +9,8 @@ interface ProduitsProps {
 }
 
 const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const { searchTerm, handleSearchChange } = useSearch();
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
 
   const { produits } = data;
 
@@ -27,10 +21,10 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
     return matchesSearch && matchesStatus;
   });
 
-  // Pagination
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+  const { currentPage, totalPages, paginatedItems: paginatedProducts, startIndex, setCurrentPage, resetPage } = usePagination({
+    items: filteredProducts,
+    itemsPerPage: 8,
+  });
 
   // Stats
   const activeProducts = produits.filter(p => p.actif).length;
@@ -57,39 +51,29 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
 
       {/* Stats */}
       <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-        <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-4'>
-          <div className='flex items-center justify-between'>
-            <div>
-              <p className='text-sm text-gray-600 mb-1'>Total</p>
-              <p className='text-2xl font-bold text-gray-900'>{totalProducts}</p>
-            </div>
-            <div className='w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md'>
-              <i className='fas fa-box text-white text-lg'></i>
-            </div>
-          </div>
-        </div>
-        <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-4'>
-          <div className='flex items-center justify-between'>
-            <div>
-              <p className='text-sm text-gray-600 mb-1'>Actifs</p>
-              <p className='text-2xl font-bold text-green-600'>{activeProducts}</p>
-            </div>
-            <div className='w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center shadow-md'>
-              <i className='fas fa-check-circle text-white text-lg'></i>
-            </div>
-          </div>
-        </div>
-        <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-4'>
-          <div className='flex items-center justify-between'>
-            <div>
-              <p className='text-sm text-gray-600 mb-1'>Inactifs</p>
-              <p className='text-2xl font-bold text-red-600'>{inactiveProducts}</p>
-            </div>
-            <div className='w-12 h-12 bg-gradient-to-br from-red-500 to-rose-600 rounded-lg flex items-center justify-center shadow-md'>
-              <i className='fas fa-times-circle text-white text-lg'></i>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          label='Total'
+          value={totalProducts}
+          icon='box'
+          iconColorFrom='blue-500'
+          iconColorTo='blue-600'
+        />
+        <StatCard
+          label='Actifs'
+          value={activeProducts}
+          icon='check-circle'
+          iconColorFrom='green-500'
+          iconColorTo='emerald-600'
+          valueColor='green-600'
+        />
+        <StatCard
+          label='Inactifs'
+          value={inactiveProducts}
+          icon='times-circle'
+          iconColorFrom='red-500'
+          iconColorTo='rose-600'
+          valueColor='red-600'
+        />
       </div>
 
       {/* Filtres */}
@@ -97,18 +81,15 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <SearchInput
             value={searchTerm}
-            onChange={(value) => {
-              setSearchTerm(value);
-              setCurrentPage(1);
-            }}
+            onChange={value => handleSearchChange(value, resetPage)}
             placeholder="Nom du produit..."
             label="Rechercher"
           />
           <SelectFilter
             value={statusFilter}
-            onChange={(value) => {
+            onChange={value => {
               setStatusFilter(value as 'all' | 'active' | 'inactive');
-              setCurrentPage(1);
+              resetPage();
             }}
             label="Statut"
             icon="filter"
@@ -169,7 +150,7 @@ const Produits: React.FC<ProduitsProps> = ({ data, currentUser }) => {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          itemsPerPage={itemsPerPage}
+          itemsPerPage={8}
           totalItems={filteredProducts.length}
           startIndex={startIndex}
         />

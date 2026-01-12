@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Badge, Card, PageHeader, Pagination, SearchInput, SelectFilter } from '../components';
+import { Avatar, Badge, Card, PageHeader, Pagination, SearchInput, SelectFilter } from '../components';
+import { usePagination, useSearch } from '../hooks';
 import { DataType, Utilisateur } from '../types';
 
 interface UtilisateursProps {
@@ -8,10 +9,8 @@ interface UtilisateursProps {
 }
 
 const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const { searchTerm, handleSearchChange } = useSearch();
   const [selectedPromo, setSelectedPromo] = useState<string>('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
 
   const { utilisateurs } = data;
 
@@ -22,10 +21,10 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
     return matchesSearch && matchesPromo;
   });
 
-  // Pagination
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+  const { currentPage, totalPages, paginatedItems: paginatedUsers, startIndex, setCurrentPage, resetPage } = usePagination({
+    items: filteredUsers,
+    itemsPerPage: 5,
+  });
 
   // Get unique promos
   const promos = Array.from(new Set(utilisateurs.map(u => u.promo))).sort();
@@ -44,10 +43,7 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
           <SearchInput
             label='Rechercher'
             value={searchTerm}
-            onChange={value => {
-              setSearchTerm(value);
-              setCurrentPage(1);
-            }}
+            onChange={value => handleSearchChange(value, resetPage)}
             placeholder='Nom, email ou code étudiant...'
             icon='fa-search'
           />
@@ -56,7 +52,7 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
             value={selectedPromo}
             onChange={value => {
               setSelectedPromo(value);
-              setCurrentPage(1);
+              resetPage();
             }}
             options={[
               { value: 'all', label: 'Toutes les promos' },
@@ -74,9 +70,7 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
             <div className='space-y-3'>
               <div className='flex items-center justify-between'>
                 <div className='flex items-center gap-3'>
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm ${user.estAdmin ? 'bg-gradient-to-br from-orange-500 to-red-600' : 'bg-gradient-to-br from-blue-500 to-blue-600'}`}>
-                    {user.nomComplet.split(' ').map(n => n[0]).join('')}
-                  </div>
+                  <Avatar name={user.nomComplet} isAdmin={user.estAdmin} size='lg' />
                   <div>
                     <p className='text-sm font-semibold text-gray-900'>{user.nomComplet}</p>
                     <p className='text-xs text-gray-500'>{user.promo}</p>
@@ -141,12 +135,7 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
                 <tr key={user.id} className='hover:bg-gray-50 transition-colors'>
                   <td className='px-6 py-4 whitespace-nowrap'>
                     <div className='flex items-center gap-3'>
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm ${user.estAdmin ? 'bg-gradient-to-br from-orange-500 to-red-600' : 'bg-gradient-to-br from-blue-500 to-blue-600'}`}>
-                        {user.nomComplet
-                          .split(' ')
-                          .map(n => n[0])
-                          .join('')}
-                      </div>
+                      <Avatar name={user.nomComplet} isAdmin={user.estAdmin} />
                       <div>
                         <p className='text-sm font-medium text-gray-900'>{user.nomComplet}</p>
                         <p className='text-xs text-gray-500'>{user.points} tampons</p>
@@ -199,7 +188,7 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
-            itemsPerPage={itemsPerPage}
+            itemsPerPage={5}
             totalItems={filteredUsers.length}
             startIndex={startIndex}
           />

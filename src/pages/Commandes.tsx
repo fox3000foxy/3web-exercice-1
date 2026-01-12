@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import Card from '../components/Card';
-import PageHeader from '../components/PageHeader';
-import Pagination from '../components/Pagination';
-import SearchInput from '../components/SearchInput';
-import SelectFilter from '../components/SelectFilter';
+import { Card, PageHeader, Pagination, SearchInput, SelectFilter, StatCard } from '../components';
+import { usePagination, useSearch } from '../hooks';
 import { DataType, Utilisateur } from '../types';
+import { formatDate, formatTime } from '../utils/formatters';
 
 interface CommandesProps {
   data: DataType;
@@ -12,10 +10,8 @@ interface CommandesProps {
 }
 
 const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const { searchTerm, handleSearchChange } = useSearch();
   const [selectedUser, setSelectedUser] = useState<string>('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
 
   const { commandes, utilisateurs, produits } = data;
 
@@ -41,32 +37,15 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
     return matchesSearch && matchesUser;
   });
 
-  // Pagination
-  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedOrders = filteredOrders.slice(startIndex, startIndex + itemsPerPage);
+  const { currentPage, totalPages, paginatedItems: paginatedOrders, startIndex, setCurrentPage, resetPage } = usePagination({
+    items: filteredOrders,
+    itemsPerPage: 10,
+  });
 
   // Stats
   const totalOrders = filteredOrders.length;
   const totalRevenue = filteredOrders.reduce((sum, order) => sum + order.montant, 0);
   const averageOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  };
-
-  const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('fr-FR', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
 
   return (
     <div className='space-y-6'>
@@ -80,39 +59,29 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
 
       {/* Stats */}
       <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-        <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-5'>
-          <div className='flex items-center justify-between'>
-            <div>
-              <p className='text-sm text-gray-600 mb-1'>Total Commandes</p>
-              <p className='text-2xl font-bold text-gray-900'>{totalOrders}</p>
-            </div>
-            <div className='w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md'>
-              <i className='fas fa-shopping-cart text-white text-lg'></i>
-            </div>
-          </div>
-        </div>
-        <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-5'>
-          <div className='flex items-center justify-between'>
-            <div>
-              <p className='text-sm text-gray-600 mb-1'>Revenu Total</p>
-              <p className='text-2xl font-bold text-green-600'>{totalRevenue.toFixed(2)} €</p>
-            </div>
-            <div className='w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center shadow-md'>
-              <i className='fas fa-euro-sign text-white text-lg'></i>
-            </div>
-          </div>
-        </div>
-        <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-5'>
-          <div className='flex items-center justify-between'>
-            <div>
-              <p className='text-sm text-gray-600 mb-1'>Panier Moyen</p>
-              <p className='text-2xl font-bold text-purple-600'>{averageOrder.toFixed(2)} €</p>
-            </div>
-            <div className='w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md'>
-              <i className='fas fa-chart-line text-white text-lg'></i>
-            </div>
-          </div>
-        </div>
+        <StatCard
+          label='Total Commandes'
+          value={totalOrders}
+          icon='shopping-cart'
+          iconColorFrom='blue-500'
+          iconColorTo='blue-600'
+        />
+        <StatCard
+          label='Revenu Total'
+          value={`${totalRevenue.toFixed(2)} €`}
+          icon='euro-sign'
+          iconColorFrom='green-500'
+          iconColorTo='emerald-600'
+          valueColor='green-600'
+        />
+        <StatCard
+          label='Panier Moyen'
+          value={`${averageOrder.toFixed(2)} €`}
+          icon='chart-line'
+          iconColorFrom='purple-500'
+          iconColorTo='purple-600'
+          valueColor='purple-600'
+        />
       </div>
 
       {/* Filtres */}
@@ -120,18 +89,15 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <SearchInput
             value={searchTerm}
-            onChange={(value) => {
-              setSearchTerm(value);
-              setCurrentPage(1);
-            }}
+            onChange={value => handleSearchChange(value, resetPage)}
             placeholder="Utilisateur ou produit..."
             label="Rechercher"
           />
           <SelectFilter
             value={selectedUser}
-            onChange={(value) => {
+            onChange={value => {
               setSelectedUser(value);
-              setCurrentPage(1);
+              resetPage();
             }}
             label="Utilisateur"
             icon="user"
@@ -223,7 +189,7 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          itemsPerPage={itemsPerPage}
+          itemsPerPage={10}
           totalItems={filteredOrders.length}
           startIndex={startIndex}
         />
