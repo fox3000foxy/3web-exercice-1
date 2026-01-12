@@ -10,7 +10,9 @@ export { default as Modal } from './Modal';
 export { default as PageHeader } from './PageHeader';
 export { default as Pagination } from './Pagination';
 export { default as ProductFormModal } from './ProductFormModal';
+export { default as RewardCard } from './RewardCard';
 export { default as SearchInput } from './SearchInput';
 export { default as SelectFilter } from './SelectFilter';
+export { default as StampsGrid } from './StampsGrid';
 export { default as StatCard } from './StatCard';
 

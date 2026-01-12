@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
+import RewardCard from '../components/RewardCard';
+import StampsGrid from '../components/StampsGrid';
 import { DataType, Produit, Utilisateur } from '../types';
 
 interface CarteFideliteProps {
@@ -80,34 +82,20 @@ const CarteFidelite: React.FC<CarteFideliteProps> = ({ data, currentUser, setCur
           <p className='text-sm text-gray-500 mt-2'>{userPoints === nombreTampons ? 'Carte complète ! 🎉' : `Plus que ${nombreTampons - userPoints} tampons`}</p>
         </div>
 
-        {/* Grille de Tampons */}
-        <div className='grid grid-cols-2 xs:grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-3 md:gap-4 mb-6'>
-          {Array.from({ length: nombreTampons }).map((_, index) => (
-            <button key={index} onClick={() => handleStampClick(index + 1)} className={`aspect-square rounded-xl flex flex-col items-center justify-center transition-all transform hover:scale-105 border-2 ${index < userPoints ? 'bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-md border-purple-600' : 'bg-white text-gray-400 hover:bg-gray-50 border-gray-300 border-dashed'}`}>
-              <i className={`fas ${index < userPoints ? 'fa-check-circle' : 'fa-circle'} text-2xl md:text-4xl`}></i>
-              <span className='mt-1 md:mt-2 font-bold text-xs md:text-sm'>#{index + 1}</span>
-            </button>
-          ))}
-        </div>
+        {/* Grille de Tampons extraite */}
+        <StampsGrid
+          userPoints={userPoints}
+          nombreTampons={nombreTampons}
+          onStampClick={handleStampClick}
+        />
 
-        {/* Récompense Info */}
-        <div className='bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6 border border-orange-200'>
-          <div className='flex items-start gap-4'>
-            <div className='w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md'>
-              <i className='fas fa-gift text-white text-xl'></i>
-            </div>
-            <div className='flex-1'>
-              <h3 className='text-lg font-bold text-gray-900 mb-1'>Récompense</h3>
-              <p className='text-gray-700'>{carteFidelite.recompense}</p>
-              {userPoints === nombreTampons && (
-                <button onClick={() => setShowRewardModal(true)} className='mt-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-2.5 px-6 rounded-lg transition-all shadow-md'>
-                  <i className='fas fa-gift mr-2'></i>
-                  Réclamer ma récompense
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        {/* Récompense Info extraite */}
+        <RewardCard
+          reward={carteFidelite.recompense}
+          userPoints={userPoints}
+          nombreTampons={nombreTampons}
+          onShowModal={() => setShowRewardModal(true)}
+        />
       </div>
 
       {/* Boutique de Snacks */}
