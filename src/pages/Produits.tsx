@@ -25,7 +25,14 @@ const Produits: React.FC = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const { currentPage, totalPages, paginatedItems: paginatedProducts, startIndex, setCurrentPage, resetPage } = usePagination({
+  const {
+    currentPage,
+    totalPages,
+    paginatedItems: paginatedProducts,
+    startIndex,
+    setCurrentPage,
+    resetPage,
+  } = usePagination({
     items: filteredProducts,
     itemsPerPage: 8,
   });
@@ -85,23 +92,20 @@ const Produits: React.FC = () => {
       return;
     }
     updateProduct(product.id, { actif: !product.actif });
-    addToast(
-      `Produit "${product.nom}" ${!product.actif ? 'activé' : 'désactivé'}`,
-      'success'
-    );
+    addToast(`Produit "${product.nom}" ${!product.actif ? 'activé' : 'désactivé'}`, 'success');
   };
 
   return (
     <div className='space-y-6'>
       {/* Header */}
       <PageHeader
-        title="Gestion des Produits"
+        title='Gestion des Produits'
         subtitle={`${filteredProducts.length} produit${filteredProducts.length > 1 ? 's' : ''} trouvé${filteredProducts.length > 1 ? 's' : ''}`}
-        icon="box"
-        iconColor="blue"
+        icon='box'
+        iconColor='blue'
         actions={
           currentUser?.estAdmin ? (
-            <Button variant="success" icon="plus" onClick={handleAddProduct}>
+            <Button variant='success' icon='plus' onClick={handleAddProduct}>
               Ajouter un produit
             </Button>
           ) : undefined
@@ -110,52 +114,27 @@ const Produits: React.FC = () => {
 
       {/* Stats */}
       <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-        <StatCard
-          label='Total'
-          value={totalProducts}
-          icon='box'
-          iconColorFrom='blue-500'
-          iconColorTo='blue-600'
-        />
-        <StatCard
-          label='Actifs'
-          value={activeProducts}
-          icon='check-circle'
-          iconColorFrom='green-500'
-          iconColorTo='emerald-600'
-          valueColor='green-600'
-        />
-        <StatCard
-          label='Inactifs'
-          value={inactiveProducts}
-          icon='times-circle'
-          iconColorFrom='red-500'
-          iconColorTo='rose-600'
-          valueColor='red-600'
-        />
+        <StatCard label='Total' value={totalProducts} icon='box' iconColorFrom='blue-500' iconColorTo='blue-600' />
+        <StatCard label='Actifs' value={activeProducts} icon='check-circle' iconColorFrom='green-500' iconColorTo='emerald-600' valueColor='green-600' />
+        <StatCard label='Inactifs' value={inactiveProducts} icon='times-circle' iconColorFrom='red-500' iconColorTo='rose-600' valueColor='red-600' />
       </div>
 
       {/* Filtres */}
       <Card>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <SearchInput
-            value={searchTerm}
-            onChange={value => handleSearchChange(value, resetPage)}
-            placeholder="Nom du produit..."
-            label="Rechercher"
-          />
+          <SearchInput value={searchTerm} onChange={value => handleSearchChange(value, resetPage)} placeholder='Nom du produit...' label='Rechercher' />
           <SelectFilter
             value={statusFilter}
             onChange={value => {
               setStatusFilter(value as 'all' | 'active' | 'inactive');
               resetPage();
             }}
-            label="Statut"
-            icon="filter"
+            label='Statut'
+            icon='filter'
             options={[
               { value: 'all', label: 'Tous les statuts' },
               { value: 'active', label: 'Actifs seulement' },
-              { value: 'inactive', label: 'Inactifs seulement' }
+              { value: 'inactive', label: 'Inactifs seulement' },
             ]}
           />
         </div>
@@ -169,7 +148,7 @@ const Produits: React.FC = () => {
               <div className='flex items-start justify-between mb-3'>
                 <h3 className={`font-semibold text-sm flex-1 ${product.actif ? 'text-gray-900' : 'text-gray-500'}`}>{product.nom}</h3>
                 <button onClick={() => toggleProductStatus(product)}>
-                  <Badge variant={product.actif ? 'green' : 'gray'} icon={product.actif ? 'check-circle' : 'times-circle'} size="sm">
+                  <Badge variant={product.actif ? 'green' : 'gray'} icon={product.actif ? 'check-circle' : 'times-circle'} size='sm'>
                     {product.actif ? 'Actif' : 'Inactif'}
                   </Badge>
                 </button>
@@ -182,15 +161,11 @@ const Produits: React.FC = () => {
               <div className='flex items-center gap-2'>
                 {currentUser?.estAdmin && (
                   <>
-                    <button
-                      onClick={() => handleEditProduct(product)}
-                      className='flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm'>
+                    <button onClick={() => handleEditProduct(product)} className='flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm'>
                       <i className='fas fa-edit mr-1.5'></i>
                       Modifier
                     </button>
-                    <button
-                      onClick={() => handleDeleteClick(product)}
-                      className='bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm'>
+                    <button onClick={() => handleDeleteClick(product)} className='bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm'>
                       <i className='fas fa-trash'></i>
                     </button>
                   </>
@@ -208,32 +183,14 @@ const Produits: React.FC = () => {
       </div>
 
       {/* Pagination */}
-      <Card padding="none">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          itemsPerPage={8}
-          totalItems={filteredProducts.length}
-          startIndex={startIndex}
-        />
+      <Card padding='none'>
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} itemsPerPage={8} totalItems={filteredProducts.length} startIndex={startIndex} />
       </Card>
 
       {/* Modals */}
-      <ProductFormModal
-        isOpen={isFormModalOpen}
-        onClose={() => setIsFormModalOpen(false)}
-        onSubmit={handleSubmitProduct}
-        product={selectedProduct}
-      />
+      <ProductFormModal isOpen={isFormModalOpen} onClose={() => setIsFormModalOpen(false)} onSubmit={handleSubmitProduct} product={selectedProduct} />
 
-      <DeleteConfirmModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleConfirmDelete}
-        itemName={selectedProduct?.nom || ''}
-        itemType="le produit"
-      />
+      <DeleteConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleConfirmDelete} itemName={selectedProduct?.nom || ''} itemType='le produit' />
     </div>
   );
 };

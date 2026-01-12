@@ -37,7 +37,14 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
     return matchesSearch && matchesUser;
   });
 
-  const { currentPage, totalPages, paginatedItems: paginatedOrders, startIndex, setCurrentPage, resetPage } = usePagination({
+  const {
+    currentPage,
+    totalPages,
+    paginatedItems: paginatedOrders,
+    startIndex,
+    setCurrentPage,
+    resetPage,
+  } = usePagination({
     items: filteredOrders,
     itemsPerPage: 10,
   });
@@ -50,63 +57,33 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
   return (
     <div className='space-y-6'>
       {/* Header */}
-      <PageHeader
-        title="Historique des Commandes"
-        subtitle={`${filteredOrders.length} commande${filteredOrders.length > 1 ? 's' : ''} enregistrée${filteredOrders.length > 1 ? 's' : ''}`}
-        icon="shopping-cart"
-        iconColor="blue"
-      />
+      <PageHeader title='Historique des Commandes' subtitle={`${filteredOrders.length} commande${filteredOrders.length > 1 ? 's' : ''} enregistrée${filteredOrders.length > 1 ? 's' : ''}`} icon='shopping-cart' iconColor='blue' />
 
       {/* Stats */}
       <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-        <StatCard
-          label='Total Commandes'
-          value={totalOrders}
-          icon='shopping-cart'
-          iconColorFrom='blue-500'
-          iconColorTo='blue-600'
-        />
-        <StatCard
-          label='Revenu Total'
-          value={`${totalRevenue.toFixed(2)} €`}
-          icon='euro-sign'
-          iconColorFrom='green-500'
-          iconColorTo='emerald-600'
-          valueColor='green-600'
-        />
-        <StatCard
-          label='Panier Moyen'
-          value={`${averageOrder.toFixed(2)} €`}
-          icon='chart-line'
-          iconColorFrom='purple-500'
-          iconColorTo='purple-600'
-          valueColor='purple-600'
-        />
+        <StatCard label='Total Commandes' value={totalOrders} icon='shopping-cart' iconColorFrom='blue-500' iconColorTo='blue-600' />
+        <StatCard label='Revenu Total' value={`${totalRevenue.toFixed(2)} €`} icon='euro-sign' iconColorFrom='green-500' iconColorTo='emerald-600' valueColor='green-600' />
+        <StatCard label='Panier Moyen' value={`${averageOrder.toFixed(2)} €`} icon='chart-line' iconColorFrom='purple-500' iconColorTo='purple-600' valueColor='purple-600' />
       </div>
 
       {/* Filtres */}
       <Card>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <SearchInput
-            value={searchTerm}
-            onChange={value => handleSearchChange(value, resetPage)}
-            placeholder="Utilisateur ou produit..."
-            label="Rechercher"
-          />
+          <SearchInput value={searchTerm} onChange={value => handleSearchChange(value, resetPage)} placeholder='Utilisateur ou produit...' label='Rechercher' />
           <SelectFilter
             value={selectedUser}
             onChange={value => {
               setSelectedUser(value);
               resetPage();
             }}
-            label="Utilisateur"
-            icon="user"
+            label='Utilisateur'
+            icon='user'
             options={[
               { value: 'all', label: 'Tous les utilisateurs' },
               ...utilisateurs.map(user => ({
                 value: user.id.toString(),
-                label: `${user.nomComplet} (${user.promo})`
-              }))
+                label: `${user.nomComplet} (${user.promo})`,
+              })),
             ]}
           />
         </div>
@@ -120,11 +97,13 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
               <div className='flex items-center justify-between'>
                 <div>
                   <p className='text-sm font-semibold text-gray-900'>{order.productName}</p>
-                  <p className='text-xs text-gray-500'>{formatDate(order.date)} à {formatTime(order.date)}</p>
+                  <p className='text-xs text-gray-500'>
+                    {formatDate(order.date)} à {formatTime(order.date)}
+                  </p>
                 </div>
                 <p className='text-lg font-bold text-blue-600'>{order.montant.toFixed(2)} €</p>
               </div>
-              
+
               <div className='grid grid-cols-2 gap-3 text-sm'>
                 <div>
                   <p className='text-gray-500 text-xs'>Utilisateur</p>
@@ -185,14 +164,7 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
         </div>
 
         {/* Pagination */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          itemsPerPage={10}
-          totalItems={filteredOrders.length}
-          startIndex={startIndex}
-        />
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} itemsPerPage={10} totalItems={filteredOrders.length} startIndex={startIndex} />
       </div>
     </div>
   );

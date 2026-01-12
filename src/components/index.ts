@@ -15,4 +15,3 @@ export { default as SearchInput } from './SearchInput';
 export { default as SelectFilter } from './SelectFilter';
 export { default as StampsGrid } from './StampsGrid';
 export { default as StatCard } from './StatCard';
-

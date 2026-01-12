@@ -68,9 +68,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     setData(prevData => {
       if (!prevData) return prevData;
 
-      const updatedUsers = prevData.utilisateurs.map(user =>
-        user.id === userId ? { ...user, ...updates } : user
-      );
+      const updatedUsers = prevData.utilisateurs.map(user => (user.id === userId ? { ...user, ...updates } : user));
 
       return {
         ...prevData,
@@ -80,7 +78,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
     // Mettre à jour currentUser si c'est celui modifié
     if (currentUser?.id === userId) {
-      setCurrentUser(prev => prev ? { ...prev, ...updates } : prev);
+      setCurrentUser(prev => (prev ? { ...prev, ...updates } : prev));
     }
   };
 
@@ -90,9 +88,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     setData(prevData => {
       if (!prevData) return prevData;
 
-      const updatedProducts = prevData.produits.map(product =>
-        product.id === productId ? { ...product, ...updates } : product
-      );
+      const updatedProducts = prevData.produits.map(product => (product.id === productId ? { ...product, ...updates } : product));
 
       return {
         ...prevData,

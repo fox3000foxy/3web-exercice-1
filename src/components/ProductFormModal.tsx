@@ -77,58 +77,25 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({ isOpen, onClose, on
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={product ? 'Modifier le produit' : 'Ajouter un produit'}
-      icon="box"
-      iconColor={product ? 'orange' : 'green'}
-      maxWidth="md"
-    >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <FormField
-          label="Nom du produit"
-          name="nom"
-          type="text"
-          value={formData.nom}
-          onChange={(value) => handleChange('nom', value as string)}
-          placeholder="Ex: Coca Cola"
-          required
-          error={errors.nom}
-          icon="tag"
-        />
+    <Modal isOpen={isOpen} onClose={onClose} title={product ? 'Modifier le produit' : 'Ajouter un produit'} icon='box' iconColor={product ? 'orange' : 'green'} maxWidth='md'>
+      <form onSubmit={handleSubmit} className='space-y-4'>
+        <FormField label='Nom du produit' name='nom' type='text' value={formData.nom} onChange={value => handleChange('nom', value as string)} placeholder='Ex: Coca Cola' required error={errors.nom} icon='tag' />
 
-        <FormField
-          label="Prix (€)"
-          name="prix"
-          type="number"
-          value={formData.prix}
-          onChange={(value) => handleChange('prix', value.toString())}
-          placeholder="0.00"
-          required
-          error={errors.prix}
-          icon="euro-sign"
-        />
+        <FormField label='Prix (€)' name='prix' type='number' value={formData.prix} onChange={value => handleChange('prix', value.toString())} placeholder='0.00' required error={errors.prix} icon='euro-sign' />
 
-        <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-          <input
-            type="checkbox"
-            id="actif"
-            checked={formData.actif}
-            onChange={(e) => handleChange('actif', e.target.checked)}
-            className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-          />
-          <label htmlFor="actif" className="text-sm font-medium text-gray-700 cursor-pointer">
+        <div className='flex items-center gap-3 p-4 bg-gray-50 rounded-lg'>
+          <input type='checkbox' id='actif' checked={formData.actif} onChange={e => handleChange('actif', e.target.checked)} className='w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500' />
+          <label htmlFor='actif' className='text-sm font-medium text-gray-700 cursor-pointer'>
             Produit actif (disponible à la vente)
           </label>
         </div>
 
-        <div className="flex gap-3 pt-4">
-          <Button type="button" variant="secondary" onClick={onClose} fullWidth>
-            <i className="fas fa-times mr-2"></i>
+        <div className='flex gap-3 pt-4'>
+          <Button type='button' variant='secondary' onClick={onClose} fullWidth>
+            <i className='fas fa-times mr-2'></i>
             Annuler
           </Button>
-          <Button type="submit" variant={product ? 'primary' : 'success'} fullWidth>
+          <Button type='submit' variant={product ? 'primary' : 'success'} fullWidth>
             <i className={`fas ${product ? 'fa-save' : 'fa-plus'} mr-2`}></i>
             {product ? 'Enregistrer' : 'Ajouter'}
           </Button>

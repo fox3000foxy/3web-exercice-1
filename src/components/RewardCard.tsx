@@ -17,10 +17,7 @@ const RewardCard: React.FC<RewardCardProps> = ({ reward, userPoints, nombreTampo
         <h3 className='text-lg font-bold text-gray-900 mb-1'>Récompense</h3>
         <p className='text-gray-700'>{reward}</p>
         {userPoints === nombreTampons && (
-          <button
-            onClick={onShowModal}
-            className='mt-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-2.5 px-6 rounded-lg transition-all shadow-md'
-          >
+          <button onClick={onShowModal} className='mt-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-2.5 px-6 rounded-lg transition-all shadow-md'>
             <i className='fas fa-gift mr-2'></i>
             Réclamer ma récompense
           </button>

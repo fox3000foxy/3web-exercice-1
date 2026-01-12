@@ -91,19 +91,10 @@ const CarteFidelite: React.FC<CarteFideliteProps> = ({ data, currentUser, setCur
         </div>
 
         {/* Grille de Tampons extraite */}
-        <StampsGrid
-          userPoints={userPoints}
-          nombreTampons={nombreTampons}
-          onStampClick={handleStampClick}
-        />
+        <StampsGrid userPoints={userPoints} nombreTampons={nombreTampons} onStampClick={handleStampClick} />
 
         {/* Récompense Info extraite */}
-        <RewardCard
-          reward={carteFidelite.recompense}
-          userPoints={userPoints}
-          nombreTampons={nombreTampons}
-          onShowModal={() => setShowRewardModal(true)}
-        />
+        <RewardCard reward={carteFidelite.recompense} userPoints={userPoints} nombreTampons={nombreTampons} onShowModal={() => setShowRewardModal(true)} />
       </div>
 
       {/* Boutique de Snacks */}
@@ -132,27 +123,15 @@ const CarteFidelite: React.FC<CarteFideliteProps> = ({ data, currentUser, setCur
       </div>
 
       {/* Modal Récompense */}
-      <Modal
-        isOpen={showRewardModal}
-        onClose={() => setShowRewardModal(false)}
-        title="Félicitations !"
-        icon="gift"
-        iconColor="yellow"
-      >
+      <Modal isOpen={showRewardModal} onClose={() => setShowRewardModal(false)} title='Félicitations !' icon='gift' iconColor='yellow'>
         <p className='text-gray-600 mb-6 leading-relaxed'>Vous avez collecté tous les tampons ! Vous pouvez maintenant choisir un produit gratuit dans notre boutique.</p>
-        <Button variant="primary" onClick={handleClaimReward} icon="gift" fullWidth>
+        <Button variant='primary' onClick={handleClaimReward} icon='gift' fullWidth>
           Choisir mon cadeau
         </Button>
       </Modal>
 
       {/* Modal Commande Produit */}
-      <Modal
-        isOpen={!!selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-        title="Commander"
-        icon="shopping-bag"
-        iconColor="blue"
-      >
+      <Modal isOpen={!!selectedProduct} onClose={() => setSelectedProduct(null)} title='Commander' icon='shopping-bag' iconColor='blue'>
         {selectedProduct && (
           <>
             <p className='text-xl font-semibold text-gray-700 mb-1'>{selectedProduct.nom}</p>
@@ -160,21 +139,16 @@ const CarteFidelite: React.FC<CarteFideliteProps> = ({ data, currentUser, setCur
 
             <div className='space-y-3'>
               <Button
-                variant="primary"
+                variant='primary'
                 onClick={() => {
                   alert(`Commande confirmée : ${selectedProduct.nom}`);
                   setSelectedProduct(null);
                 }}
-                icon="check"
-                fullWidth
-              >
+                icon='check'
+                fullWidth>
                 Confirmer la commande
               </Button>
-              <Button
-                variant="secondary"
-                onClick={() => setSelectedProduct(null)}
-                fullWidth
-              >
+              <Button variant='secondary' onClick={() => setSelectedProduct(null)} fullWidth>
                 Annuler
               </Button>
             </div>

@@ -62,7 +62,7 @@ interface ToastContainerProps {
 
 const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onClose }) => {
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2 max-w-md">
+    <div className='fixed top-4 right-4 z-50 space-y-2 max-w-md'>
       {toasts.map(toast => (
         <ToastItem key={toast.id} toast={toast} onClose={onClose} />
       ))}
@@ -103,17 +103,11 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
   };
 
   return (
-    <div
-      className={`${getStyles()} border-l-4 p-4 rounded-lg shadow-lg animate-fade-in flex items-start gap-3`}
-      role="alert"
-    >
+    <div className={`${getStyles()} border-l-4 p-4 rounded-lg shadow-lg animate-fade-in flex items-start gap-3`} role='alert'>
       <i className={`fas ${getIcon()} text-lg mt-0.5`}></i>
-      <p className="flex-1 text-sm font-medium">{toast.message}</p>
-      <button
-        onClick={() => onClose(toast.id)}
-        className="text-current hover:opacity-70 transition-opacity"
-      >
-        <i className="fas fa-times"></i>
+      <p className='flex-1 text-sm font-medium'>{toast.message}</p>
+      <button onClick={() => onClose(toast.id)} className='text-current hover:opacity-70 transition-opacity'>
+        <i className='fas fa-times'></i>
       </button>
     </div>
   );

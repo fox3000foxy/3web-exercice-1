@@ -4,12 +4,12 @@
  * @returns La date formatée (ex: 12/01/2026)
  */
 export const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-    });
+  const date = new Date(dateString);
+  return date.toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 };
 
 /**
@@ -18,11 +18,11 @@ export const formatDate = (dateString: string): string => {
  * @returns L'heure formatée (ex: 14:30)
  */
 export const formatTime = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit',
-    });
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 };
 
 /**
@@ -32,7 +32,7 @@ export const formatTime = (dateString: string): string => {
  * @returns Le montant formaté (ex: 12.50 €)
  */
 export const formatCurrency = (amount: number, decimals: number = 2): string => {
-    return `${amount.toFixed(decimals)} €`;
+  return `${amount.toFixed(decimals)} €`;
 };
 
 /**
@@ -43,5 +43,5 @@ export const formatCurrency = (amount: number, decimals: number = 2): string => 
  * @returns Le mot avec la bonne forme
  */
 export const pluralize = (count: number, singular: string, plural?: string): string => {
-    return count > 1 ? (plural || `${singular}s`) : singular;
+  return count > 1 ? plural || `${singular}s` : singular;
 };

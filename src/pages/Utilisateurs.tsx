@@ -21,7 +21,14 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
     return matchesSearch && matchesPromo;
   });
 
-  const { currentPage, totalPages, paginatedItems: paginatedUsers, startIndex, setCurrentPage, resetPage } = usePagination({
+  const {
+    currentPage,
+    totalPages,
+    paginatedItems: paginatedUsers,
+    startIndex,
+    setCurrentPage,
+    resetPage,
+  } = usePagination({
     items: filteredUsers,
     itemsPerPage: 5,
   });
@@ -31,22 +38,11 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
 
   return (
     <div className='space-y-6'>
-      <PageHeader
-        title='Gestion des Utilisateurs'
-        subtitle={`${filteredUsers.length} utilisateur${filteredUsers.length > 1 ? 's' : ''} au total`}
-        icon='fa-users'
-        iconColor='text-blue-600'
-      />
+      <PageHeader title='Gestion des Utilisateurs' subtitle={`${filteredUsers.length} utilisateur${filteredUsers.length > 1 ? 's' : ''} au total`} icon='fa-users' iconColor='text-blue-600' />
 
       <Card>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <SearchInput
-            label='Rechercher'
-            value={searchTerm}
-            onChange={value => handleSearchChange(value, resetPage)}
-            placeholder='Nom, email ou code étudiant...'
-            icon='fa-search'
-          />
+          <SearchInput label='Rechercher' value={searchTerm} onChange={value => handleSearchChange(value, resetPage)} placeholder='Nom, email ou code étudiant...' icon='fa-search' />
           <SelectFilter
             label='Promo'
             value={selectedPromo}
@@ -54,10 +50,7 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
               setSelectedPromo(value);
               resetPage();
             }}
-            options={[
-              { value: 'all', label: 'Toutes les promos' },
-              ...promos.map(promo => ({ value: promo, label: promo }))
-            ]}
+            options={[{ value: 'all', label: 'Toutes les promos' }, ...promos.map(promo => ({ value: promo, label: promo }))]}
             icon='fa-graduation-cap'
           />
         </div>
@@ -77,12 +70,16 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
                   </div>
                 </div>
                 {user.estAdmin ? (
-                  <Badge variant='orange' icon='fa-shield-alt' size='sm'>Admin</Badge>
+                  <Badge variant='orange' icon='fa-shield-alt' size='sm'>
+                    Admin
+                  </Badge>
                 ) : (
-                  <Badge variant='blue' icon='fa-user' size='sm'>Utilisateur</Badge>
+                  <Badge variant='blue' icon='fa-user' size='sm'>
+                    Utilisateur
+                  </Badge>
                 )}
               </div>
-              
+
               <div className='grid grid-cols-2 gap-3 text-sm'>
                 <div>
                   <p className='text-gray-500 text-xs'>Email</p>
@@ -97,7 +94,7 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
                   <p className='text-gray-900 font-semibold'>{user.points}</p>
                 </div>
               </div>
-              
+
               <div className='flex items-center gap-2 pt-2 border-t border-gray-100'>
                 <button className='flex-1 text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors text-sm font-medium'>
                   <i className='fas fa-edit mr-1.5'></i>Modifier
@@ -183,16 +180,7 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
           </table>
         </div>
 
-        {totalPages > 1 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            itemsPerPage={5}
-            totalItems={filteredUsers.length}
-            startIndex={startIndex}
-          />
-        )}
+        {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} itemsPerPage={5} totalItems={filteredUsers.length} startIndex={startIndex} />}
       </Card>
     </div>
   );

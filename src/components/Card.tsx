@@ -1,37 +1,31 @@
 import React from 'react';
 
 interface CardProps {
-    children: React.ReactNode;
-    className?: string;
-    padding?: 'none' | 'sm' | 'md' | 'lg';
-    hover?: boolean;
+  children: React.ReactNode;
+  className?: string;
+  padding?: 'none' | 'sm' | 'md' | 'lg';
+  hover?: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ 
-    children, 
-    className = '', 
-    padding = 'md',
-    hover = false 
-}) => {
-    const paddingClasses = {
-        none: '',
-        sm: 'p-3 sm:p-4',
-        md: 'p-4 sm:p-5 md:p-6',
-        lg: 'p-5 sm:p-6 md:p-8',
-    };
+const Card: React.FC<CardProps> = ({ children, className = '', padding = 'md', hover = false }) => {
+  const paddingClasses = {
+    none: '',
+    sm: 'p-3 sm:p-4',
+    md: 'p-4 sm:p-5 md:p-6',
+    lg: 'p-5 sm:p-6 md:p-8',
+  };
 
-    return (
-        <div 
-            className={`
+  return (
+    <div
+      className={`
                 bg-white rounded-xl shadow-sm border border-gray-200 
                 ${paddingClasses[padding]}
                 ${hover ? 'hover:shadow-md transition-shadow' : ''}
                 ${className}
-            `}
-        >
-            {children}
-        </div>
-    );
+            `}>
+      {children}
+    </div>
+  );
 };
 
 export default Card;
