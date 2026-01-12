@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Badge, Card, PageHeader, Pagination, SearchInput, SelectFilter } from '../components';
 import { DataType, Utilisateur } from '../types';
 
 interface UtilisateursProps {
@@ -31,61 +32,42 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
 
   return (
     <div className='space-y-6'>
-      {/* Header */}
-      <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-6'>
-        <h1 className='text-2xl font-bold text-gray-900 flex items-center gap-2'>
-          <i className='fas fa-users text-blue-600'></i>
-          Gestion des Utilisateurs
-        </h1>
-        <p className='text-gray-600 mt-1'>
-          {filteredUsers.length} utilisateur{filteredUsers.length > 1 ? 's' : ''} au total
-        </p>
-      </div>
+      <PageHeader
+        title='Gestion des Utilisateurs'
+        subtitle={`${filteredUsers.length} utilisateur${filteredUsers.length > 1 ? 's' : ''} au total`}
+        icon='fa-users'
+        iconColor='text-blue-600'
+      />
 
-      {/* Filtres */}
-      <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-6'>
+      <Card>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <div>
-            <label className='block text-sm font-medium text-gray-700 mb-2'>
-              <i className='fas fa-search mr-2'></i>
-              Rechercher
-            </label>
-            <input
-              type='text'
-              value={searchTerm}
-              onChange={e => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              placeholder='Nom, email ou code étudiant...'
-              className='input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-            />
-          </div>
-          <div>
-            <label className='block text-sm font-medium text-gray-700 mb-2'>
-              <i className='fas fa-graduation-cap mr-2'></i>
-              Promo
-            </label>
-            <select
-              value={selectedPromo}
-              onChange={e => {
-                setSelectedPromo(e.target.value);
-                setCurrentPage(1);
-              }}
-              className='input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'>
-              <option value='all'>Toutes les promos</option>
-              {promos.map(promo => (
-                <option key={promo} value={promo}>
-                  {promo}
-                </option>
-              ))}
-            </select>
-          </div>
+          <SearchInput
+            label='Rechercher'
+            value={searchTerm}
+            onChange={value => {
+              setSearchTerm(value);
+              setCurrentPage(1);
+            }}
+            placeholder='Nom, email ou code étudiant...'
+            icon='fa-search'
+          />
+          <SelectFilter
+            label='Promo'
+            value={selectedPromo}
+            onChange={value => {
+              setSelectedPromo(value);
+              setCurrentPage(1);
+            }}
+            options={[
+              { value: 'all', label: 'Toutes les promos' },
+              ...promos.map(promo => ({ value: promo, label: promo }))
+            ]}
+            icon='fa-graduation-cap'
+          />
         </div>
-      </div>
+      </Card>
 
-      {/* Table */}
-      <div className='bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden'>
+      <Card padding='none' className='overflow-hidden'>
         <div className='overflow-x-auto'>
           <table className='w-full'>
             <thead className='bg-gray-50 border-b border-gray-200'>
@@ -126,15 +108,13 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
                   </td>
                   <td className='px-6 py-4 whitespace-nowrap'>
                     {user.estAdmin ? (
-                      <span className='px-3 py-1 bg-orange-100 text-orange-700 border border-orange-200 rounded-full text-xs font-medium flex items-center gap-1.5 w-fit'>
-                        <i className='fas fa-shield-alt'></i>
+                      <Badge variant='orange' icon='fa-shield-alt'>
                         Admin
-                      </span>
+                      </Badge>
                     ) : (
-                      <span className='px-3 py-1 bg-blue-100 text-blue-700 border border-blue-200 rounded-full text-xs font-medium flex items-center gap-1.5 w-fit'>
-                        <i className='fas fa-user'></i>
+                      <Badge variant='blue' icon='fa-user'>
                         Utilisateur
-                      </span>
+                      </Badge>
                     )}
                   </td>
                   <td className='px-6 py-4 whitespace-nowrap'>
@@ -158,26 +138,17 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
           </table>
         </div>
 
-        {/* Pagination */}
         {totalPages > 1 && (
-          <div className='px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between'>
-            <div className='text-sm text-gray-700'>
-              Affichage {startIndex + 1} à {Math.min(startIndex + itemsPerPage, filteredUsers.length)} sur {filteredUsers.length} résultats
-            </div>
-            <div className='flex items-center gap-2'>
-              <button onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))} disabled={currentPage === 1} className='px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'>
-                <i className='fas fa-chevron-left'></i>
-              </button>
-              <span className='text-sm text-gray-700'>
-                Page {currentPage} sur {totalPages}
-              </span>
-              <button onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))} disabled={currentPage === totalPages} className='px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'>
-                <i className='fas fa-chevron-right'></i>
-              </button>
-            </div>
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            itemsPerPage={itemsPerPage}
+            totalItems={filteredUsers.length}
+            startIndex={startIndex}
+          />
         )}
-      </div>
+      </Card>
     </div>
   );
 };
