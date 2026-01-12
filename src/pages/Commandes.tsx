@@ -146,8 +146,37 @@ const Commandes: React.FC<CommandesProps> = ({ data, currentUser }) => {
         </div>
       </Card>
 
-      {/* Table */}
-      <div className='bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden'>
+      {/* Vue Mobile - Cartes */}
+      <div className='md:hidden space-y-4'>
+        {paginatedOrders.map(order => (
+          <Card key={order.id} hover>
+            <div className='space-y-3'>
+              <div className='flex items-center justify-between'>
+                <div>
+                  <p className='text-sm font-semibold text-gray-900'>{order.productName}</p>
+                  <p className='text-xs text-gray-500'>{formatDate(order.date)} à {formatTime(order.date)}</p>
+                </div>
+                <p className='text-lg font-bold text-blue-600'>{order.montant.toFixed(2)} €</p>
+              </div>
+              
+              <div className='grid grid-cols-2 gap-3 text-sm'>
+                <div>
+                  <p className='text-gray-500 text-xs'>Utilisateur</p>
+                  <p className='text-gray-900 font-medium truncate'>{order.userName}</p>
+                  <p className='text-gray-500 text-xs'>{order.userPromo}</p>
+                </div>
+                <div className='text-right'>
+                  <p className='text-gray-500 text-xs'>Quantité</p>
+                  <p className='text-gray-900 font-semibold text-lg'>{order.quantite}</p>
+                </div>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Vue Desktop - Tableau */}
+      <div className='bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hidden md:block'>
         <div className='overflow-x-auto'>
           <table className='w-full'>
             <thead className='bg-gray-50 border-b border-gray-200'>

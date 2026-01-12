@@ -24,7 +24,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
       </div>
 
       {/* Stats Grid */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6'>
         <StatsCard title='Total des Ventes' value={`${statistiques.totalVentes.toFixed(2)} €`} icon='euro-sign' color='green' trend={{ value: 12.5, isPositive: true }} />
         <StatsCard title='Bénéfice' value={`${statistiques.benefice.toFixed(2)} €`} icon='chart-line' color='blue' trend={{ value: 8.3, isPositive: true }} />
         <StatsCard title='Nombre de Clients' value={statistiques.nombreClients} icon='users' color='purple' />
@@ -51,7 +51,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
             <p className='text-sm text-gray-600'>unités vendues</p>
           </div>
         </div>
-        <div className='mt-4 grid grid-cols-2 gap-4'>
+        <div className='mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4'>
           <div className='bg-gray-50 border border-gray-200 p-4 rounded-lg'>
             <p className='text-sm text-gray-600 mb-1'>Moyenne par commande</p>
             <p className='text-xl font-bold text-gray-900'>{statistiques.moyenneEurosParCommande.toFixed(2)} €</p>
@@ -64,7 +64,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
       </div>
 
       {/* Charts Row */}
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+      <div className='grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6'>
         {/* Pie Chart - Répartition des Paiements */}
         <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-6'>
           <h2 className='text-lg font-bold text-gray-900 mb-4 flex items-center gap-2'>

@@ -59,7 +59,7 @@ const CarteFidelite: React.FC<CarteFideliteProps> = ({ data, currentUser, setCur
       </div>
 
       {/* Carte de Fidélité */}
-      <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-8'>
+      <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 md:p-8'>
         <div className='flex items-center justify-between mb-6'>
           <div>
             <h2 className='text-xl font-bold text-gray-900'>Vos Tampons</h2>
@@ -81,11 +81,11 @@ const CarteFidelite: React.FC<CarteFideliteProps> = ({ data, currentUser, setCur
         </div>
 
         {/* Grille de Tampons */}
-        <div className='grid grid-cols-4 gap-4 mb-6'>
+        <div className='grid grid-cols-2 xs:grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-3 md:gap-4 mb-6'>
           {Array.from({ length: nombreTampons }).map((_, index) => (
             <button key={index} onClick={() => handleStampClick(index + 1)} className={`aspect-square rounded-xl flex flex-col items-center justify-center transition-all transform hover:scale-105 border-2 ${index < userPoints ? 'bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-md border-purple-600' : 'bg-white text-gray-400 hover:bg-gray-50 border-gray-300 border-dashed'}`}>
-              <i className={`fas ${index < userPoints ? 'fa-check-circle' : 'fa-circle'} text-4xl`}></i>
-              <span className='mt-2 font-bold text-sm'>#{index + 1}</span>
+              <i className={`fas ${index < userPoints ? 'fa-check-circle' : 'fa-circle'} text-2xl md:text-4xl`}></i>
+              <span className='mt-1 md:mt-2 font-bold text-xs md:text-sm'>#{index + 1}</span>
             </button>
           ))}
         </div>
@@ -119,7 +119,7 @@ const CarteFidelite: React.FC<CarteFideliteProps> = ({ data, currentUser, setCur
           <h2 className='text-xl font-bold text-gray-900'>Boutique de Snacks</h2>
         </div>
 
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+        <div className='grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4'>
           {activeProduits.map(produit => (
             <div key={produit.id} className='bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-blue-300 transition-all group'>
               <div className='flex items-start justify-between mb-3'>

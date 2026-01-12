@@ -67,7 +67,63 @@ const Utilisateurs: React.FC<UtilisateursProps> = ({ data, currentUser }) => {
         </div>
       </Card>
 
-      <Card padding='none' className='overflow-hidden'>
+      {/* Vue Mobile - Cartes */}
+      <div className='md:hidden space-y-4'>
+        {paginatedUsers.map(user => (
+          <Card key={user.id} hover>
+            <div className='space-y-3'>
+              <div className='flex items-center justify-between'>
+                <div className='flex items-center gap-3'>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm ${user.estAdmin ? 'bg-gradient-to-br from-orange-500 to-red-600' : 'bg-gradient-to-br from-blue-500 to-blue-600'}`}>
+                    {user.nomComplet.split(' ').map(n => n[0]).join('')}
+                  </div>
+                  <div>
+                    <p className='text-sm font-semibold text-gray-900'>{user.nomComplet}</p>
+                    <p className='text-xs text-gray-500'>{user.promo}</p>
+                  </div>
+                </div>
+                {user.estAdmin ? (
+                  <Badge variant='orange' icon='fa-shield-alt' size='sm'>Admin</Badge>
+                ) : (
+                  <Badge variant='blue' icon='fa-user' size='sm'>Utilisateur</Badge>
+                )}
+              </div>
+              
+              <div className='grid grid-cols-2 gap-3 text-sm'>
+                <div>
+                  <p className='text-gray-500 text-xs'>Email</p>
+                  <p className='text-gray-900 truncate'>{user.email}</p>
+                </div>
+                <div>
+                  <p className='text-gray-500 text-xs'>Code Étudiant</p>
+                  <p className='text-gray-900 font-mono text-xs'>{user.codeAdherent}</p>
+                </div>
+                <div>
+                  <p className='text-gray-500 text-xs'>Tampons</p>
+                  <p className='text-gray-900 font-semibold'>{user.points}</p>
+                </div>
+              </div>
+              
+              <div className='flex items-center gap-2 pt-2 border-t border-gray-100'>
+                <button className='flex-1 text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors text-sm font-medium'>
+                  <i className='fas fa-edit mr-1.5'></i>Modifier
+                </button>
+                <button className='flex-1 text-green-600 hover:bg-green-50 p-2 rounded-lg transition-colors text-sm font-medium'>
+                  <i className='fas fa-shopping-cart mr-1.5'></i>Commandes
+                </button>
+                {currentUser?.estAdmin && (
+                  <button className='text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors'>
+                    <i className='fas fa-trash'></i>
+                  </button>
+                )}
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Vue Desktop - Tableau */}
+      <Card padding='none' className='overflow-hidden hidden md:block'>
         <div className='overflow-x-auto'>
           <table className='w-full'>
             <thead className='bg-gray-50 border-b border-gray-200'>

@@ -8,6 +8,16 @@
   box-sizing: border-box;
 }
 
+/* Breakpoint personnalisé pour très petits écrans */
+@media (min-width: 475px) {
+  .xs\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .xs\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 body {
   font-family:
     'Inter',
